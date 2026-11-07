@@ -1,0 +1,531 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NovaBank | Banking Management</title>
+
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+body {
+    background: #f1f4f9;
+    color: #17233b;
+}
+
+header {
+    background: #101f3d;
+    color: white;
+    padding: 22px 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+header h1 {
+    font-size: 27px;
+    letter-spacing: 1px;
+}
+
+header span {
+    color: #36c5f0;
+}
+
+.container {
+    display: flex;
+    min-height: calc(100vh - 75px);
+}
+
+.sidebar {
+    width: 230px;
+    background: #172b4d;
+    padding: 25px 15px;
+}
+
+.sidebar button {
+    display: block;
+    width: 100%;
+    padding: 15px;
+    margin-bottom: 10px;
+    background: transparent;
+    border: none;
+    color: white;
+    text-align: left;
+    cursor: pointer;
+    border-radius: 8px;
+    font-size: 15px;
+}
+
+.sidebar button:hover,
+.sidebar button.active {
+    background: #2476d2;
+}
+
+main {
+    flex: 1;
+    padding: 30px;
+    overflow-x: auto;
+}
+
+.page {
+    display: none;
+}
+
+.page.active {
+    display: block;
+}
+
+h2 {
+    margin-bottom: 22px;
+}
+
+.cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 18px;
+    margin-bottom: 30px;
+}
+
+.card {
+    background: white;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 3px 12px #0000000c;
+}
+
+.card p {
+    color: #718096;
+    margin-bottom: 12px;
+}
+
+.card h2 {
+    margin: 0;
+    color: #1768c4;
+}
+
+.panel {
+    background: white;
+    padding: 25px;
+    border-radius: 12px;
+    margin-bottom: 25px;
+    box-shadow: 0 3px 12px #0000000c;
+}
+
+input, select {
+    width: 100%;
+    padding: 12px;
+    margin: 8px 0 15px;
+    border: 1px solid #d5dce8;
+    border-radius: 7px;
+}
+
+label {
+    font-weight: bold;
+    font-size: 14px;
+}
+
+.btn {
+    background: #1768c4;
+    color: white;
+    border: none;
+    padding: 12px 20px;
+    border-radius: 7px;
+    cursor: pointer;
+}
+
+.btn:hover {
+    background: #104c91;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
+    min-width: 500px;
+}
+
+th, td {
+    padding: 14px;
+    text-align: left;
+    border-bottom: 1px solid #e8edf4;
+}
+
+th {
+    background: #f3f6fa;
+}
+
+.status {
+    color: green;
+    font-weight: bold;
+}
+
+@media(max-width: 700px) {
+    .container {
+        flex-direction: column;
+    }
+    .sidebar {
+        width: 100%;
+        display: flex;
+        overflow-x: auto;
+        padding: 10px;
+    }
+    .sidebar button {
+        min-width: 125px;
+        text-align: center;
+    }
+    main {
+        padding: 15px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+    <h1>Nova<span>Bank</span></h1>
+    <p>Banking Management System</p>
+</header>
+
+<div class="container">
+
+<nav class="sidebar">
+    <button class="active" onclick="showPage('dashboard',this)">Dashboard</button>
+    <button onclick="showPage('customers',this)">Customers</button>
+    <button onclick="showPage('accounts',this)">Accounts</button>
+    <button onclick="showPage('salary',this)">Salary Management</button>
+    <button onclick="showPage('transactions',this)">Transactions</button>
+</nav>
+
+<main>
+
+<!-- DASHBOARD -->
+<section id="dashboard" class="page active">
+    <h2>Bank Overview</h2>
+
+    <div class="cards">
+        <div class="card">
+            <p>Total Customers</p>
+            <h2 id="customerCount">0</h2>
+        </div>
+
+        <div class="card">
+            <p>Total Accounts</p>
+            <h2 id="accountCount">0</h2>
+        </div>
+
+        <div class="card">
+            <p>Total Salary Paid</p>
+            <h2 id="salaryTotal">KES 0</h2>
+        </div>
+
+        <div class="card">
+            <p>Total Account Balances</p>
+            <h2 id="balanceTotal">KES 0</h2>
+        </div>
+    </div>
+
+    <div class="panel">
+        <h3>Welcome to NovaBank</h3>
+        <p>Manage customer records, bank accounts and simulated employee salary payments from one dashboard.</p>
+    </div>
+</section>
+
+<!-- CUSTOMERS -->
+<section id="customers" class="page">
+    <h2>Customer Management</h2>
+
+    <div class="panel">
+        <h3>Register New Customer</h3>
+
+        <form id="customerForm">
+            <label>Full Name</label>
+            <input id="customerName" required placeholder="Enter full name">
+
+            <label>Email Address</label>
+            <input id="customerEmail" type="email" required placeholder="Enter email">
+
+            <label>Phone Number</label>
+            <input id="customerPhone" required placeholder="Enter phone number">
+
+            <button class="btn">Register Customer</button>
+        </form>
+    </div>
+
+    <div class="panel">
+        <h3>Registered Customers</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Customer ID</th>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Phone</th>
+                </tr>
+            </thead>
+            <tbody id="customerTable"></tbody>
+        </table>
+    </div>
+</section>
+
+<!-- ACCOUNTS -->
+<section id="accounts" class="page">
+    <h2>Account Management</h2>
+
+    <div class="panel">
+        <h3>Create Bank Account</h3>
+
+        <form id="accountForm">
+            <label>Account Holder</label>
+            <select id="accountCustomer" required>
+                <option value="">Select customer</option>
+            </select>
+
+            <label>Account Type</label>
+            <select id="accountType">
+                <option>Savings</option>
+                <option>Current</option>
+            </select>
+
+            <button class="btn">Create Account</button>
+        </form>
+    </div>
+
+    <div class="panel">
+        <h3>Bank Accounts</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Account Number</th>
+                    <th>Customer</th>
+                    <th>Type</th>
+                    <th>Balance</th>
+                </tr>
+            </thead>
+            <tbody id="accountTable"></tbody>
+        </table>
+    </div>
+</section>
+
+<!-- SALARY -->
+<section id="salary" class="page">
+    <h2>Salary Management</h2>
+
+    <div class="panel">
+        <h3>Process Employee Salary</h3>
+
+        <form id="salaryForm">
+            <label>Employee / Customer</label>
+            <select id="salaryCustomer" required>
+                <option value="">Select person</option>
+            </select>
+
+            <label>Account</label>
+            <select id="salaryAccount" required>
+                <option value="">Select account</option>
+            </select>
+
+            <label>Salary Amount (KES)</label>
+            <input id="salaryAmount" type="number" min="1" required>
+
+            <label>Payment Month</label>
+            <input id="salaryMonth" type="month" required>
+
+            <button class="btn">Process Salary</button>
+        </form>
+    </div>
+</section>
+
+<!-- TRANSACTIONS -->
+<section id="transactions" class="page">
+    <h2>Transaction History</h2>
+
+    <div class="panel">
+        <table>
+            <thead>
+                <tr>
+                    <th>Reference</th>
+                    <th>Account</th>
+                    <th>Type</th>
+                    <th>Amount</th>
+                    <th>Date</th>
+                </tr>
+            </thead>
+            <tbody id="transactionTable"></tbody>
+        </table>
+    </div>
+</section>
+
+</main>
+</div>
+
+<script>
+let customers = JSON.parse(localStorage.getItem("nbCustomers") || "[]");
+let accounts = JSON.parse(localStorage.getItem("nbAccounts") || "[]");
+let transactions = JSON.parse(localStorage.getItem("nbTransactions") || "[]");
+
+function saveData() {
+    localStorage.setItem("nbCustomers", JSON.stringify(customers));
+    localStorage.setItem("nbAccounts", JSON.stringify(accounts));
+    localStorage.setItem("nbTransactions", JSON.stringify(transactions));
+}
+
+function showPage(page, button) {
+    document.querySelectorAll(".page").forEach(p => p.classList.remove("active"));
+    document.getElementById(page).classList.add("active");
+
+    document.querySelectorAll(".sidebar button").forEach(b => b.classList.remove("active"));
+    button.classList.add("active");
+}
+
+function money(amount) {
+    return "KES " + Number(amount).toLocaleString("en-KE");
+}
+
+function render() {
+    document.getElementById("customerCount").textContent = customers.length;
+    document.getElementById("accountCount").textContent = accounts.length;
+
+    const salaryTotal = transactions
+        .filter(t => t.type === "Salary Credit")
+        .reduce((sum, t) => sum + t.amount, 0);
+
+    const balanceTotal = accounts.reduce((sum, a) => sum + a.balance, 0);
+
+    document.getElementById("salaryTotal").textContent = money(salaryTotal);
+    document.getElementById("balanceTotal").textContent = money(balanceTotal);
+
+    document.getElementById("customerTable").innerHTML = customers.map(c => `
+        <tr>
+            <td>${c.id}</td>
+            <td>${escapeHTML(c.name)}</td>
+            <td>${escapeHTML(c.email)}</td>
+            <td>${escapeHTML(c.phone)}</td>
+        </tr>
+    `).join("");
+
+    document.getElementById("accountCustomer").innerHTML =
+        '<option value="">Select customer</option>' +
+        customers.map(c => `<option value="${c.id}">${escapeHTML(c.name)}</option>`).join("");
+
+    document.getElementById("salaryCustomer").innerHTML =
+        '<option value="">Select person</option>' +
+        customers.map(c => `<option value="${c.id}">${escapeHTML(c.name)}</option>`).join("");
+
+    document.getElementById("accountTable").innerHTML = accounts.map(a => {
+        const customer = customers.find(c => c.id === a.customerId);
+        return `<tr>
+            <td>${a.number}</td>
+            <td>${customer ? escapeHTML(customer.name) : "Unknown"}</td>
+            <td>${a.type}</td>
+            <td>${money(a.balance)}</td>
+        </tr>`;
+    }).join("");
+
+    document.getElementById("transactionTable").innerHTML =
+        transactions.map(t => `<tr>
+            <td>${t.reference}</td>
+            <td>${t.account}</td>
+            <td>${t.type}</td>
+            <td>${money(t.amount)}</td>
+            <td>${t.date}</td>
+        </tr>`).join("");
+
+    updateSalaryAccounts();
+}
+
+function escapeHTML(value) {
+    return String(value).replace(/[&<>"']/g, char => ({
+        "&": "&amp;", "<": "&lt;", ">": "&gt;",
+        '"': "&quot;", "'": "&#39;"
+    })[char]);
+}
+
+document.getElementById("customerForm").addEventListener("submit", e => {
+    e.preventDefault();
+
+    customers.push({
+        id: "NB-C" + Date.now(),
+        name: document.getElementById("customerName").value.trim(),
+        email: document.getElementById("customerEmail").value.trim(),
+        phone: document.getElementById("customerPhone").value.trim()
+    });
+
+    saveData();
+    e.target.reset();
+    render();
+    alert("Customer registered successfully!");
+});
+
+document.getElementById("accountForm").addEventListener("submit", e => {
+    e.preventDefault();
+
+    const customerId = document.getElementById("accountCustomer").value;
+    if (!customerId) return;
+
+    accounts.push({
+        number: "NB" + Date.now(),
+        customerId,
+        type: document.getElementById("accountType").value,
+        balance: 0
+    });
+
+    saveData();
+    e.target.reset();
+    render();
+    alert("Bank account created successfully!");
+});
+
+document.getElementById("salaryCustomer").addEventListener("change", updateSalaryAccounts);
+
+function updateSalaryAccounts() {
+    const customerId = document.getElementById("salaryCustomer").value;
+    const select = document.getElementById("salaryAccount");
+
+    const matching = accounts.filter(a => a.customerId === customerId);
+
+    select.innerHTML = '<option value="">Select account</option>' +
+        matching.map(a => `<option value="${a.number}">${a.number} (${a.type})</option>`).join("");
+}
+
+document.getElementById("salaryForm").addEventListener("submit", e => {
+    e.preventDefault();
+
+    const accountNumber = document.getElementById("salaryAccount").value;
+    const amount = Number(document.getElementById("salaryAmount").value);
+    const month = document.getElementById("salaryMonth").value;
+
+    const account = accounts.find(a => a.number === accountNumber);
+
+    if (!account || !Number.isFinite(amount) || amount <= 0 || !month) {
+        alert("Please enter valid salary details.");
+        return;
+    }
+
+    account.balance += amount;
+
+    transactions.unshift({
+        reference: "NB-T" + Date.now(),
+        account: account.number,
+        type: "Salary Credit",
+        amount,
+        date: month
+    });
+
+    saveData();
+    e.target.reset();
+    render();
+    alert("Salary credit recorded successfully!");
+});
+
+render();
+</script>
+
+</body>
+</html>
