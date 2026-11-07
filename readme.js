@@ -1,3 +1,5 @@
+transactions.append(transaction)
+return transaction
 username = data.get("username")
 password = data.get("password")
 
